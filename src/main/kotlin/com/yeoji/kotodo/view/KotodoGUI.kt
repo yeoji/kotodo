@@ -3,6 +3,7 @@ package com.yeoji.kotodo.view
 import com.yeoji.kotodo.events.TodoAddedEvent
 import com.yeoji.kotodo.events.TodoRemovedEvent
 import com.yeoji.kotodo.todos.Todo
+import com.yeoji.kotodo.todos.TodoModel
 import com.yeoji.kotodo.todos.TodosController
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
@@ -40,6 +41,11 @@ class KotodoGUI : View("Kotodo") {
     var addTodoField: TextField by singleAssign()
 
     /**
+     * The Todo ViewModel
+     */
+    val todoModel = TodoModel(Todo())
+
+    /**
      * Add a new todo to the application
      */
     val addTodo: EventHandler<ActionEvent>? = EventHandler {
@@ -51,30 +57,26 @@ class KotodoGUI : View("Kotodo") {
     }
 
     /**
-     * Remove a todo from the application
-     */
-    val removeTodo: EventHandler<ActionEvent>? = EventHandler { event ->
-        val buttonId: String = (event.source as Button).id
-        todosController.removeTodo(Integer.parseInt(buttonId))
-    }
-
-    /**
      * Define the Kotodo UI
      */
-    override val root = vbox {
-        label("Kotodo")
-        hbox {
-            textfield() {
-                addTodoField = this
-                onAction = addTodo
+    override val root = borderpane {
+        center {
+            vbox {
+                hbox {
+                    textfield() {
+                        addTodoField = this
+                        onAction = addTodo
+                    }
+                    button("+").onAction = addTodo
+                }
             }
-            button("+").onAction = addTodo
         }
     }
 
     init {
         with(root) {
-            this += createTodoList()
+            this.center += createTodoList()
+            this.right = createTodoForm()
         }
     }
 
@@ -90,10 +92,18 @@ class KotodoGUI : View("Kotodo") {
                 hbox {
                     button("-") {
                         id = Integer.toString(it.id)
-                        onAction = removeTodo
+                        setOnAction { event ->
+                            val buttonId: String = (event.source as Button).id
+                            todosController.removeTodo(Integer.parseInt(buttonId))
+                        }
                     }
-                    label(it.description)
+                    label(it.descriptionProperty())
                 }
+            }
+
+            // Update the todo inside the view model on selection change
+            todoModel.rebindOnChange(this) { selectedTodo ->
+                todo = selectedTodo ?: Todo()
             }
 
             // subscribe to the todo events so UI can update
@@ -106,5 +116,40 @@ class KotodoGUI : View("Kotodo") {
                 }
             }
         }
+    }
+
+    /**
+     * Create the Edit Todo form
+     */
+    private fun createTodoForm(): Form {
+        return form {
+            fieldset("Edit Todo") {
+                field("Description") {
+                    textfield(todoModel.description)
+                }
+                button("Save") {
+                    disableProperty().bind(todoModel.dirtyStateProperty().not())
+                    setOnAction {
+                        saveTodo()
+                    }
+                }
+                button("Reset") {
+                    setOnAction {
+                        todoModel.rollback()
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * This function saves an updated todo
+     */
+    private fun saveTodo() {
+        // Flush changes from the text fields into the model
+        todoModel.commit()
+        val todo = todoModel.todo
+
+        todosController.updateTodo(todo)
     }
 }

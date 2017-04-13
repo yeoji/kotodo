@@ -3,6 +3,9 @@ package com.yeoji.kotodo.todos
 import com.yeoji.kotodo.events.TodoAddedEvent
 import com.yeoji.kotodo.events.TodoRemovedEvent
 import tornadofx.Controller
+import tornadofx.ViewModel
+import tornadofx.getProperty
+import tornadofx.property
 import java.util.*
 
 /**
@@ -95,4 +98,14 @@ class TodosController : Controller() {
  * This is the Todo data class
  * It contains information about a todo
  */
-data class Todo(val id: Int, var description: String)
+class Todo(val id: Int = 0, description: String = "") {
+    var description by property(description)
+    fun descriptionProperty() = getProperty(Todo::description)
+}
+
+/**
+ * The Todo model used for the View
+ */
+class TodoModel(var todo: Todo) : ViewModel() {
+    val description = bind { todo.descriptionProperty() }
+}

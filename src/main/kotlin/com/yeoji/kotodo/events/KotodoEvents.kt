@@ -13,3 +13,6 @@ import tornadofx.FXEvent
 
 // This event is fired when a todo is added
 class TodoAddedEvent(val todo: Todo) : FXEvent()
+
+// This event is fired when a todo is removed
+class TodoRemovedEvent(val todo: Todo?) : FXEvent()

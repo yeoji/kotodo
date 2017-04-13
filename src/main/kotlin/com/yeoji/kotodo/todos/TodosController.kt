@@ -1,6 +1,7 @@
 package com.yeoji.kotodo.todos
 
 import com.yeoji.kotodo.events.TodoAddedEvent
+import com.yeoji.kotodo.events.TodoRemovedEvent
 import tornadofx.Controller
 import java.util.*
 
@@ -38,23 +39,34 @@ class TodosController : Controller() {
     /**
      * This function removes a todo from the list
      */
-    fun removeTodo(todo: Todo) {
+    fun removeTodo(todoId: Int) {
+        val todo: Todo? = getTodoById(todoId)
         // remove the todo
         this.todos.remove(todo)
+
+        fire(TodoRemovedEvent(todo))
     }
 
     /**
      * This function updates a todo in the list
      */
     fun updateTodo(todo: Todo) {
-        // find the todo by ID
-        val oldTodo: Todo? = this.todos.find {
-            it.id == todo.id
-        }
+        val oldTodo: Todo? = getTodoById(todo.id)
         if (oldTodo != null) {
             this.todos.remove(oldTodo)
             this.todos.add(todo)
         }
+    }
+
+    /**
+     * Find and return a Todo by its ID
+     */
+    fun getTodoById(todoId: Int): Todo? {
+        // find the todo by ID
+        val todo: Todo? = this.todos.find {
+            it.id == todoId
+        }
+        return todo
     }
 
     /**

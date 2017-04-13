@@ -1,6 +1,8 @@
 package com.yeoji.kotodo.todos
 
-import java.util.ArrayList;
+import com.yeoji.kotodo.events.TodoAddedEvent
+import tornadofx.Controller
+import java.util.*
 
 /**
  * This class contains and manages the list of todos in the application.
@@ -8,16 +10,12 @@ import java.util.ArrayList;
  * Created by jq on 9/04/2017.
  */
 
-class TodosContainer {
+class TodosController : Controller() {
 
     /**
      * The list of todos in the application
      */
     var todos: MutableList<Todo> = ArrayList()
-
-    constructor(todos: MutableList<Todo>) {
-        this.todos = todos
-    }
 
     /**
      * This returns the list of todos in the application
@@ -33,6 +31,8 @@ class TodosContainer {
         val todoId: Int = generateTodoId()
         val todo: Todo = Todo(todoId, todoDesc)
         this.todos.add(todo)
+
+        fire(TodoAddedEvent(todo))
     }
 
     /**
@@ -51,7 +51,7 @@ class TodosContainer {
         val oldTodo: Todo? = this.todos.find {
             it.id == todo.id
         }
-        if(oldTodo != null) {
+        if (oldTodo != null) {
             this.todos.remove(oldTodo)
             this.todos.add(todo)
         }

@@ -16,3 +16,6 @@ class TodoAddedEvent(val todo: Todo) : FXEvent()
 
 // This event is fired when a todo is removed
 class TodoRemovedEvent(val todo: Todo?) : FXEvent()
+
+// This event is fired when a todo is completed
+class TodoCompletedEvent(val todo: Todo) : FXEvent()

@@ -2,10 +2,7 @@ package com.yeoji.kotodo.todos
 
 import com.yeoji.kotodo.events.TodoAddedEvent
 import com.yeoji.kotodo.events.TodoRemovedEvent
-import tornadofx.Controller
-import tornadofx.ViewModel
-import tornadofx.getProperty
-import tornadofx.property
+import tornadofx.*
 import java.util.*
 
 /**
@@ -98,14 +95,18 @@ class TodosController : Controller() {
  * This is the Todo data class
  * It contains information about a todo
  */
-class Todo(val id: Int = 0, description: String = "") {
-    var description by property(description)
+class Todo(val id: Int = 0, description: String = "", completed: Boolean = false) {
+    var description: String by property(description)
     fun descriptionProperty() = getProperty(Todo::description)
+
+    var completed: Boolean by property(completed)
+    fun completedProperty() = getProperty(Todo::completed)
 }
 
 /**
  * The Todo model used for the View
  */
-class TodoModel(var todo: Todo) : ViewModel() {
-    val description = bind { todo.descriptionProperty() }
+class TodoModel : ItemViewModel<Todo>() {
+    val description = bind { item?.observable(Todo::description) }
+    val completed = bind { item?.observable(Todo::completed) }
 }

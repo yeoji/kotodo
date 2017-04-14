@@ -1,15 +1,7 @@
 package com.yeoji.kotodo.view
 
-import com.yeoji.kotodo.events.TodoAddedEvent
-import com.yeoji.kotodo.events.TodoRemovedEvent
-import com.yeoji.kotodo.todos.Todo
-import com.yeoji.kotodo.todos.TodoModel
-import com.yeoji.kotodo.todos.TodosController
-import javafx.event.ActionEvent
-import javafx.event.EventHandler
-import javafx.scene.control.Button
-import javafx.scene.control.ListView
-import javafx.scene.control.TextField
+import main.kotlin.com.yeoji.kotodo.view.todos.TodoFormView
+import main.kotlin.com.yeoji.kotodo.view.todos.TodoListView
 import tornadofx.*
 
 /**
@@ -31,125 +23,21 @@ class KotodoApp : App(KotodoGUI::class)
 class KotodoGUI : View("Kotodo") {
 
     /**
-     * The Todos controller that manages the todos in the app
+     * The todo list UI
      */
-    val todosController: TodosController by inject()
-
-    /**
-     * The field that allows users to add a todo
-     */
-    var addTodoField: TextField by singleAssign()
-
-    /**
-     * The Todo ViewModel
-     */
-    val todoModel = TodoModel(Todo())
-
-    /**
-     * Add a new todo to the application
-     */
-    val addTodo: EventHandler<ActionEvent>? = EventHandler {
-        val desc: String = addTodoField.text
-        if (desc.length > 0) {
-            todosController.addTodo(desc)
-            addTodoField.clear()
-        }
-    }
+    val todoListView: TodoListView by inject()
 
     /**
      * Define the Kotodo UI
      */
     override val root = borderpane {
         center {
-            vbox {
-                hbox {
-                    textfield() {
-                        addTodoField = this
-                        onAction = addTodo
-                    }
-                    button("+").onAction = addTodo
-                }
-            }
+            this += todoListView.root
         }
-    }
 
-    init {
-        with(root) {
-            this.center += createTodoList()
-            this.right = createTodoForm()
+        right {
+            // Add the TodoFormView to the right pane and pass the todoModel as a param
+            this += find<TodoFormView>(mapOf(TodoFormView::todoModel to todoListView.todoModel))
         }
-    }
-
-    /**
-     * Create the list that will show all todos
-     */
-    private fun createTodoList(): ListView<Todo> {
-        return listview {
-            listOf(todosController.getAllTodos())
-
-            // customize the list cell to show todo info
-            cellCache {
-                hbox {
-                    button("-") {
-                        id = Integer.toString(it.id)
-                        setOnAction { event ->
-                            val buttonId: String = (event.source as Button).id
-                            todosController.removeTodo(Integer.parseInt(buttonId))
-                        }
-                    }
-                    label(it.descriptionProperty())
-                }
-            }
-
-            // Update the todo inside the view model on selection change
-            todoModel.rebindOnChange(this) { selectedTodo ->
-                todo = selectedTodo ?: Todo()
-            }
-
-            // subscribe to the todo events so UI can update
-            subscribe<TodoAddedEvent> { event ->
-                items.add(event.todo)
-            }
-            subscribe<TodoRemovedEvent> { event ->
-                if (event.todo != null) {
-                    items.remove(event.todo)
-                }
-            }
-        }
-    }
-
-    /**
-     * Create the Edit Todo form
-     */
-    private fun createTodoForm(): Form {
-        return form {
-            fieldset("Edit Todo") {
-                field("Description") {
-                    textfield(todoModel.description)
-                }
-                button("Save") {
-                    disableProperty().bind(todoModel.dirtyStateProperty().not())
-                    setOnAction {
-                        saveTodo()
-                    }
-                }
-                button("Reset") {
-                    setOnAction {
-                        todoModel.rollback()
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * This function saves an updated todo
-     */
-    private fun saveTodo() {
-        // Flush changes from the text fields into the model
-        todoModel.commit()
-        val todo = todoModel.todo
-
-        todosController.updateTodo(todo)
     }
 }

@@ -63,7 +63,10 @@ class TodoListView : View() {
      */
     private fun createTodoList(): ListView<Todo> {
         return listview {
-            listOf(todosController.getAllTodos())
+            val todos: List<Todo> = todosController.getAllTodos().filter { !it.completed }
+            for (todo in todos) {
+                items.add(todo)
+            }
 
             // customize the list cell to show todo info
             cellCache {
@@ -121,9 +124,10 @@ class TodoListView : View() {
      */
     private fun createCompletedTodoList(): ListView<Todo> {
         return listview {
-            listOf(todosController.getAllTodos().filter {
-                it.completed
-            })
+            val todos: List<Todo> = todosController.getAllTodos().filter { it.completed }
+            for (todo in todos) {
+                items.add(todo)
+            }
 
             // customize the list cell to show todo info
             cellCache {

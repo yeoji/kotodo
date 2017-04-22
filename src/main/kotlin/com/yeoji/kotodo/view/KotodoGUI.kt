@@ -1,16 +1,8 @@
 package com.yeoji.kotodo.view
 
-import main.kotlin.com.yeoji.kotodo.view.todos.TodoFormView
-import main.kotlin.com.yeoji.kotodo.view.todos.TodoListView
+import com.yeoji.kotodo.view.todos.TodoFormView
+import com.yeoji.kotodo.view.todos.TodoListView
 import tornadofx.*
-
-/**
- * This is the main application
- * It is the entry point for the view
- *
- * Created by jq on 10/04/2017.
- */
-class KotodoApp : App(KotodoGUI::class)
 
 /**
  * This class is the main view for Kotodo

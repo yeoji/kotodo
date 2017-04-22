@@ -3,6 +3,7 @@ package com.yeoji.kotodo.view.todos
 import com.yeoji.kotodo.controller.ControllerManager
 import com.yeoji.kotodo.controller.todos.TodoModel
 import com.yeoji.kotodo.controller.todos.TodosController
+import javafx.scene.control.Alert
 import tornadofx.*
 
 /**
@@ -45,10 +46,15 @@ class TodoFormView : View() {
      * This function saves an updated todo
      */
     private fun saveTodo() {
-        // Flush changes from the text fields into the model
-        todoModel.commit()
-        val todo = todoModel.item
+        if (todoModel.isNotEmpty) {
+            // Flush changes from the text fields into the model
+            todoModel.commit()
+            val todo = todoModel.item
 
-        todosController.updateTodo(todo)
+            todosController.updateTodo(todo)
+        } else {
+            alert(Alert.AlertType.ERROR, "No Todo Selected!", "Please select a Todo before trying to edit.")
+            todoModel.rollback()
+        }
     }
 }

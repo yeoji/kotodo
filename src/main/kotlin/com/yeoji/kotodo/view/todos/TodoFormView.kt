@@ -1,7 +1,8 @@
-package main.kotlin.com.yeoji.kotodo.view.todos
+package com.yeoji.kotodo.view.todos
 
-import com.yeoji.kotodo.todos.TodoModel
-import com.yeoji.kotodo.todos.TodosController
+import com.yeoji.kotodo.controller.ControllerManager
+import com.yeoji.kotodo.controller.todos.TodoModel
+import com.yeoji.kotodo.controller.todos.TodosController
 import tornadofx.*
 
 /**
@@ -14,7 +15,7 @@ class TodoFormView : View() {
     /**
      * The Todos controller that manages the todos in the app
      */
-    val todosController: TodosController by inject()
+    val todosController = ControllerManager.getInstance().retrieveController(TodosController::class) as TodosController
 
     /**
      * The Todo ViewModel

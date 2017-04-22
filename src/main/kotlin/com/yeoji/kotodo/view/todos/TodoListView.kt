@@ -1,11 +1,12 @@
-package main.kotlin.com.yeoji.kotodo.view.todos
+package com.yeoji.kotodo.view.todos
 
+import com.yeoji.kotodo.controller.ControllerManager
 import com.yeoji.kotodo.events.TodoAddedEvent
 import com.yeoji.kotodo.events.TodoCompletedEvent
 import com.yeoji.kotodo.events.TodoRemovedEvent
-import com.yeoji.kotodo.todos.Todo
-import com.yeoji.kotodo.todos.TodoModel
-import com.yeoji.kotodo.todos.TodosController
+import com.yeoji.kotodo.controller.todos.Todo
+import com.yeoji.kotodo.controller.todos.TodoModel
+import com.yeoji.kotodo.controller.todos.TodosController
 import javafx.event.ActionEvent
 import javafx.scene.control.Button
 import javafx.scene.control.CheckBox
@@ -24,7 +25,7 @@ class TodoListView : View() {
     /**
      * The Todos controller that manages the todos in the app
      */
-    val todosController: TodosController by inject()
+    val todosController = ControllerManager.getInstance().retrieveController(TodosController::class) as TodosController
 
     /**
      * The Todo ViewModel
@@ -57,13 +58,15 @@ class TodoListView : View() {
         }
     }
 
-
     /**
      * Create the list that will show all todos
      */
     private fun createTodoList(): ListView<Todo> {
         return listview {
-            listOf(todosController.getAllTodos())
+            val todos: List<Todo> = todosController.getAllTodos().filter { !it.completed }
+            for (todo in todos) {
+                items.add(todo)
+            }
 
             // customize the list cell to show todo info
             cellCache {
@@ -121,9 +124,10 @@ class TodoListView : View() {
      */
     private fun createCompletedTodoList(): ListView<Todo> {
         return listview {
-            listOf(todosController.getAllTodos().filter {
-                it.completed
-            })
+            val todos: List<Todo> = todosController.getAllTodos().filter { it.completed }
+            for (todo in todos) {
+                items.add(todo)
+            }
 
             // customize the list cell to show todo info
             cellCache {

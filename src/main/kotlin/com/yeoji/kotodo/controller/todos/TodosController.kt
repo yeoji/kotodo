@@ -1,4 +1,4 @@
-package com.yeoji.kotodo.todos
+package com.yeoji.kotodo.controller.todos
 
 import com.yeoji.kotodo.events.TodoAddedEvent
 import com.yeoji.kotodo.events.TodoRemovedEvent
@@ -27,10 +27,21 @@ class TodosController : Controller() {
 
     /**
      * This function adds a new todo to the list
+     * Used when a new todo is added via GUI
      */
     fun addTodo(todoDesc: String) {
         val todoId: Int = generateTodoId()
         val todo: Todo = Todo(todoId, todoDesc)
+        this.todos.add(todo)
+
+        fire(TodoAddedEvent(todo))
+    }
+
+    /**
+     * This function adds a new todo to the list
+     * Used when todos are loaded from a data handler
+     */
+    fun addTodo(todo: Todo) {
         this.todos.add(todo)
 
         fire(TodoAddedEvent(todo))

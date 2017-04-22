@@ -1,6 +1,6 @@
 package com.yeoji.kotodo.events
 
-import com.yeoji.kotodo.todos.Todo
+import com.yeoji.kotodo.controller.todos.Todo
 import tornadofx.FXEvent
 
 /**

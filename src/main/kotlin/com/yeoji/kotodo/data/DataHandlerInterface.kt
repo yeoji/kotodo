@@ -1,6 +1,6 @@
 package com.yeoji.kotodo.data
 
-import com.yeoji.kotodo.controller.todos.Todo
+import com.yeoji.kotodo.model.Todo
 
 /**
  * This is an interface used for any data saving/loading in Kotodo

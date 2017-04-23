@@ -3,7 +3,6 @@ package com.yeoji.kotodo.view
 import com.yeoji.kotodo.view.todos.TodoFormView
 import com.yeoji.kotodo.view.todos.TodoListView
 import tornadofx.*
-
 /**
  * This class is the main view for Kotodo
  * It displays the list of todos and is the

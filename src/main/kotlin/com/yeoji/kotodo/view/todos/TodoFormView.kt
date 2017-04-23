@@ -1,8 +1,10 @@
 package com.yeoji.kotodo.view.todos
 
 import com.yeoji.kotodo.controller.ControllerManager
-import com.yeoji.kotodo.controller.todos.TodoModel
 import com.yeoji.kotodo.controller.todos.TodosController
+import com.yeoji.kotodo.model.TodoModel
+import com.yeoji.kotodo.model.TodoPriority
+import javafx.collections.FXCollections.observableArrayList
 import javafx.scene.control.Alert
 import tornadofx.*
 
@@ -27,6 +29,11 @@ class TodoFormView : View() {
         fieldset("Edit Todo") {
             field("Description") {
                 textfield(todoModel.description)
+            }
+            field("Priority") {
+                combobox<TodoPriority>(todoModel.priority) {
+                    items = observableArrayList(TodoPriority.values().toCollection(ArrayList<TodoPriority>()))
+                }
             }
             button("Save") {
                 disableProperty().bind(todoModel.dirtyStateProperty().not())

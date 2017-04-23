@@ -6,9 +6,10 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.stream.JsonReader
-import com.yeoji.kotodo.controller.todos.Todo
 import com.yeoji.kotodo.data.DataHandlerInterface
 import com.yeoji.kotodo.data.properties.DataHandlerProperties
+import com.yeoji.kotodo.model.Todo
+import com.yeoji.kotodo.model.TodoPriority
 import com.yeoji.kotodo.util.ResourcesUtil
 import java.io.EOFException
 import java.io.File
@@ -98,11 +99,13 @@ class JSONDataHandler : DataHandlerInterface {
                 jsonReader.nextName()
                 val description = jsonReader.nextString()
                 jsonReader.nextName()
+                val priority = jsonReader.nextString()
+                jsonReader.nextName()
                 val completed = jsonReader.nextBoolean()
 
                 jsonReader.endObject()
 
-                todos.add(Todo(id, description, completed))
+                todos.add(Todo(id, description, completed, TodoPriority.valueOf(priority)))
             }
             jsonReader.endArray()
         } catch(e: EOFException) {
@@ -124,6 +127,7 @@ class JSONDataHandler : DataHandlerInterface {
             jsonObject(
                     "id" to it.id,
                     "description" to it.description,
+                    "priority" to it.priority.name,
                     "completed" to it.completed
             )
         }

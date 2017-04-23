@@ -4,9 +4,9 @@ import com.yeoji.kotodo.controller.ControllerManager
 import com.yeoji.kotodo.events.TodoAddedEvent
 import com.yeoji.kotodo.events.TodoCompletedEvent
 import com.yeoji.kotodo.events.TodoRemovedEvent
-import com.yeoji.kotodo.controller.todos.Todo
-import com.yeoji.kotodo.controller.todos.TodoModel
 import com.yeoji.kotodo.controller.todos.TodosController
+import com.yeoji.kotodo.model.Todo
+import com.yeoji.kotodo.model.TodoModel
 import javafx.event.ActionEvent
 import javafx.scene.control.Button
 import javafx.scene.control.CheckBox
@@ -164,7 +164,10 @@ class TodoListView : View() {
                 bind(todo.completedProperty())
                 setOnAction { event -> completeTodo(event) }
             }
+            
             label(todo.descriptionProperty())
+            label(" | ")
+            label(todo.priorityProperty())
 
             button("-") {
                 id = Integer.toString(todo.id)

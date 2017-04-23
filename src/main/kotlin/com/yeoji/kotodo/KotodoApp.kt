@@ -4,8 +4,8 @@ import com.yeoji.kotodo.controller.ControllerManager
 import com.yeoji.kotodo.data.DataHandlerInterface
 import com.yeoji.kotodo.data.properties.DataHandlerConstants
 import com.yeoji.kotodo.data.properties.DataHandlerProperties
-import com.yeoji.kotodo.controller.todos.Todo
 import com.yeoji.kotodo.controller.todos.TodosController
+import com.yeoji.kotodo.model.Todo
 import com.yeoji.kotodo.view.KotodoGUI
 import tornadofx.App
 

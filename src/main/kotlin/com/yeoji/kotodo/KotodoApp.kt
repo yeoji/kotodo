@@ -1,6 +1,7 @@
 package com.yeoji.kotodo
 
 import com.yeoji.kotodo.controller.ControllerManager
+import com.yeoji.kotodo.controller.timer.TimerController
 import com.yeoji.kotodo.data.DataHandlerInterface
 import com.yeoji.kotodo.data.properties.DataHandlerConstants
 import com.yeoji.kotodo.data.properties.DataHandlerProperties
@@ -31,8 +32,9 @@ class KotodoApp : App(KotodoGUI::class) {
      * Initialize our controllers and register them with the ControllerManager
      */
     private fun initControllers() {
-        // register TodoController
+        // register controllers
         ControllerManager.getInstance().registerController(TodosController())
+        ControllerManager.getInstance().registerController(TimerController())
     }
 
     /**

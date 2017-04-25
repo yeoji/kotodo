@@ -1,10 +1,12 @@
 package com.yeoji.kotodo.view.todos
 
 import com.yeoji.kotodo.controller.ControllerManager
+import com.yeoji.kotodo.controller.timer.TimerController
 import com.yeoji.kotodo.events.TodoAddedEvent
 import com.yeoji.kotodo.events.TodoCompletedEvent
 import com.yeoji.kotodo.events.TodoRemovedEvent
 import com.yeoji.kotodo.controller.todos.TodosController
+import com.yeoji.kotodo.events.TodoSelectedEvent
 import com.yeoji.kotodo.model.Todo
 import com.yeoji.kotodo.model.TodoModel
 import javafx.event.ActionEvent
@@ -164,7 +166,7 @@ class TodoListView : View() {
                 bind(todo.completedProperty())
                 setOnAction { event -> completeTodo(event) }
             }
-            
+
             label(todo.descriptionProperty())
             label(" | ")
             label(todo.priorityProperty())
@@ -176,6 +178,8 @@ class TodoListView : View() {
                     todosController.removeTodo(Integer.parseInt(buttonId))
                 }
             }
+
+            setOnMouseClicked { fire(TodoSelectedEvent(todo)) }
         }
     }
 

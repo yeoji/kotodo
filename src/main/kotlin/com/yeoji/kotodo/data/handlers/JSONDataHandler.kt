@@ -101,11 +101,14 @@ class JSONDataHandler : DataHandlerInterface {
                 jsonReader.nextName()
                 val priority = jsonReader.nextString()
                 jsonReader.nextName()
+                val timeTaken = jsonReader.nextLong()
+                jsonReader.nextName()
                 val completed = jsonReader.nextBoolean()
 
                 jsonReader.endObject()
 
-                todos.add(Todo(id, description, completed, TodoPriority.valueOf(priority)))
+                val todo: Todo = Todo(id, description, completed, TodoPriority.valueOf(priority), timeTaken)
+                todos.add(todo)
             }
             jsonReader.endArray()
         } catch(e: EOFException) {
@@ -128,6 +131,7 @@ class JSONDataHandler : DataHandlerInterface {
                     "id" to it.id,
                     "description" to it.description,
                     "priority" to it.priority.name,
+                    "timeTaken" to it.timeTaken,
                     "completed" to it.completed
             )
         }
